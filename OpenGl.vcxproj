@@ -123,16 +123,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="D:\迅雷下载\src\glad.c" />
-    <ClCompile Include="test.cpp" />
+    <ClCompile Include="light.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="color.glsl" />
     <None Include="colorYellow.glsl" />
     <None Include="CoorVertex.vs" />
+    <None Include="lamp.fs" />
+    <None Include="lamp.vs" />
+    <None Include="lighting.fs" />
+    <None Include="lighting.vs" />
     <None Include="uniform.glsl" />
     <None Include="vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>

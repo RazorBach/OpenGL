@@ -18,7 +18,7 @@
     <ClCompile Include="D:\迅雷下载\src\glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="test.cpp">
+    <ClCompile Include="light.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -38,12 +38,27 @@
     <None Include="CoorVertex.vs">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="lamp.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="lamp.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="lighting.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="lighting.vs">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="stb_image.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

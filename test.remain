@@ -20,16 +20,36 @@ using namespace std;
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+//calculate lookat mat4
+glm::mat4 calculate_lookAt_matrix(glm::vec3 position, glm::vec3 target, glm::vec3 worldUp);
+void cout2mat4();
 
+// Function prototypes
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 //shaderSource from file
 const char * readFile(string, string&);
 void exeHelloTriangle(GLFWwindow* window);
 
 float mix = 0.2;
-float fovy = 45.0f;
+float aspect = 45.0f;
 float ration =(float) SCR_WIDTH / (float)SCR_HEIGHT;
 float viewX, viewY, viewZ=-3.0f;
+
+float deltaTime = 0.0f;	// Time between current frame and last frame
+float lastFrame = 0.0f; // Time of last frame
+
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+
+bool firstMouse = true;
+float yaw = -90.0f;	// yaw is initialized to -90.0 degrees since a yaw of 0.0 results in a direction vector pointing to the right so we initially rotate a bit to the left.
+float pitch = 0.0f;
+float lastX = 800.0f / 2.0;
+float lastY = 600.0 / 2.0;
+float fov = 45.0f;
 
 void processInput(GLFWwindow *window)
 {
@@ -38,27 +58,47 @@ void processInput(GLFWwindow *window)
 		//将窗口设置为关闭，跳出循环  
 		glfwSetWindowShouldClose(window, true);
 	}
-	else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
-	{
-		//fovy++;
-		viewZ += 0.1f;
-	}
-	else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
-	{
-		//fovy--;
-		viewZ -= 0.1f;
-	}
-	else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
-	{
-		//ration -= 0.01f;
-		viewX -= 0.1f;
-	}
-	else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
-	{
-		//ration += 0.01f;
-		viewX += 0.1f;
-	}
+	//else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS)
+	//{
+	//	fovy++;
+	//	//viewZ += 0.1f;
+	//}
+	//else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS)
+	//{
+	//	fovy--;
+	//	//viewZ -= 0.1f;
+	//}
+	//else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+	//{
+	//	ration -= 0.01f;
+	//	//viewX -= 0.1f;
+	//}
+	//else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+	//{
+	//	ration += 0.01f;
+	//	//viewX += 0.1f;
+	//}
+	//deltaTime变量，它储存渲染上一帧所用的时间.我们把所有速度都去乘以deltaTime值。当我们的deltaTime变大时意味着上一帧渲染花了更多时间，所以这一帧使用这个更大的deltaTime的值乘以速度，会获得更高的速度，这样就与上一帧平衡了。使用这种方法时，无论你的机器快还是慢，摄像机的速度都会保持一致，这样每个用户的体验就都一样了。
+	float currentFrame = glfwGetTime();
+	deltaTime = currentFrame - lastFrame;
+	lastFrame = currentFrame;
+	float cameraSpeed = 2.5 * deltaTime;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		cameraPos += cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		cameraPos -= cameraSpeed * cameraFront;
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	//cout
+	if (glfwGetKey(window, GLFW_KEY_C) == GLFW_PRESS)
+		cout2mat4();
+	//限制在地面上
+	//cameraPos.y = 0;
 }
+
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
@@ -75,7 +115,9 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 //	cin >> vec.x;
 //}
 
-int main()
+
+
+int TEST()
 {
 	//testGLM();
 	//return 0;
@@ -97,6 +139,10 @@ int main()
 	}
 	//显示窗口  
 	glfwMakeContextCurrent(window);
+
+	// Set the required callback functions
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 
 	//设置回调，当窗口大小调整后将调用该回调函数  
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
@@ -295,6 +341,7 @@ int main()
 	glDeleteShader(fragmentShader);
 
 	glEnable(GL_DEPTH_TEST);
+	
 	// 使用循环达到循环渲染效果  
 	while (!glfwWindowShouldClose(window))
 	{
@@ -356,15 +403,22 @@ int main()
 		};
 		model = glm::rotate(model, (GLfloat)glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 		//lookat函数
+		//旋转
 		GLfloat radius = 10.0f;
 		GLfloat camX = sin(glfwGetTime()) * radius;
 		GLfloat camZ = cos(glfwGetTime()) * radius;
-		view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+		//view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0,1.0));
+		//自由移动
+		//方向(Direction)是当前的位置加上我们刚刚定义的方向向量。这样能保证无论我们怎么移动，摄像机都会注视目标(注视 z轴负方向，或者说 摄像机z轴负方向)
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+		//view = calculate_lookAt_matrix(cameraPos, cameraPos + cameraFront, cameraUp);
+		
+		
 
 		//view = glm::translate(view, glm::vec3(viewX, viewY, viewZ));
 
 		//cout << "viewX:" << viewX << "," << "viewY:" << viewY <<","<< "viewZ:" << viewZ <<endl;
-		projection = glm::perspective(glm::radians(fovy), ration, 0.1f, 100.0f);
+		projection = glm::perspective(glm::radians(aspect), ration, 0.1f, 100.0f);
 		//cout << "fovy:" << fovy << "," << "aspect-ratio" << ration << endl;
 		//glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, &model[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
@@ -401,6 +455,7 @@ int main()
 	}
 	// optional: de-allocate all resources once they've outlived their purpose:
 	// ------------------------------------------------------------------------
+	
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
@@ -408,6 +463,110 @@ int main()
 	//终止渲染 关闭并清理glfw本地资源  
 	glfwTerminate();
 	return 0;
+}
+
+
+void cout2mat4() {
+	glm::mat4 viewByGlm = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	glm::mat4 view = calculate_lookAt_matrix(cameraPos, cameraPos + cameraFront, cameraUp);
+	cout << "by GLM:" << endl;
+	for (int i = 0; i != 4; ++i) {
+		for (int j = 0; j != 4; ++j) {
+			cout << viewByGlm[j][i] << " ";
+		}
+		cout << endl;
+	}
+	cout << "by calculate" << endl;
+	for (int i = 0; i != 4; ++i) {
+		for (int j = 0; j != 4; ++j) {
+			cout << view[j][i] << " ";
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
+
+glm::mat4 calculate_lookAt_matrix(glm::vec3 position, glm::vec3 target, glm::vec3 worldUp) {
+	glm::vec3 zaxis = position - target;
+	glm::vec3 xaxis = glm::normalize(glm::cross(glm::normalize(worldUp), zaxis));
+	glm::vec3 yaxis = glm::cross(zaxis, xaxis);
+	cout << "x." << xaxis.x << "." << xaxis.y << "." << xaxis.z << endl;
+	cout << "y." << yaxis.x << "." << yaxis.y << "." << yaxis.z << endl;
+	cout << "z." << zaxis.x << "." << zaxis.y << "." << zaxis.z << endl;
+	glm::mat4 translation; // Identity matrix by default
+	translation[3][0] = -position.x; // Third column, first row
+	translation[3][1] = -position.y;
+	translation[3][2] = -position.z;
+	//translation = glm::translate(translation, glm::vec3(-position.x, -position.y, -position.z));
+	cout << "translation:" << endl;
+	for (int i = 0; i != 4; ++i) {
+		for (int j = 0; j != 4; ++j) {
+			cout << translation[j][i] << " ";
+		}
+		cout << endl;
+	}
+
+	glm::mat4 rotation;
+	rotation[0][0] = xaxis.x; // First column, first row
+	rotation[1][0] = xaxis.y;
+	rotation[2][0] = xaxis.z;
+	rotation[0][1] = yaxis.x; // First column, second row
+	rotation[1][1] = yaxis.y;
+	rotation[2][1] = yaxis.z;
+	rotation[0][2] = zaxis.x; // First column, third row
+	rotation[1][2] = zaxis.y;
+	rotation[2][2] = zaxis.z;
+	cout << "rotation:" << endl;
+	for (int i = 0; i != 4; ++i) {
+		for (int j = 0; j != 4; ++j) {
+			cout << rotation[j][i] << " ";
+		}
+		cout << endl;
+	}
+	return rotation*translation;
+
+}
+
+void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
+{
+	if (aspect >= 1.0f && aspect <= 45.0f)
+		aspect -= yoffset;
+	if (aspect <= 1.0f)
+		aspect = 1.0f;
+	if (aspect >= 45.0f)
+		aspect = 45.0f;
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+	if (firstMouse) {
+		lastX = xpos;
+		lastY = ypos;
+		firstMouse = false;
+		return;
+	}
+	float xoffset = xpos - lastX;
+	float yoffset = lastY - ypos;
+	lastX = xpos;
+	lastY = ypos;
+
+	float sensitivity = 0.10;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	yaw += xoffset;
+	pitch += yoffset;
+
+	if (pitch > 89.0f)
+		pitch = 89.0f;
+	if (pitch < -89.0f)
+		pitch = -89.0f;
+
+	glm::vec3 front;
+	front.x = cos(glm::radians(pitch)) * cos(glm::radians(yaw));
+	front.y = sin(glm::radians(pitch));
+	front.z = cos(glm::radians(pitch)) * sin(glm::radians(yaw));
+	cameraFront = glm::normalize(front);
+
 }
 
 const char* readFile(string file, string& strTemp)
