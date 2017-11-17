@@ -50,6 +50,30 @@
     <None Include="lighting.vs">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="lightingGouraud.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="lightingGouraud.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="material.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="material.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="light_caster.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="light_caster.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="cutoff.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="mutiple.fs">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">

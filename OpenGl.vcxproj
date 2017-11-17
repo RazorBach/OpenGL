@@ -129,10 +129,18 @@
     <None Include="color.glsl" />
     <None Include="colorYellow.glsl" />
     <None Include="CoorVertex.vs" />
+    <None Include="cutoff.fs" />
     <None Include="lamp.fs" />
     <None Include="lamp.vs" />
     <None Include="lighting.fs" />
     <None Include="lighting.vs" />
+    <None Include="lightingGouraud.fs" />
+    <None Include="lightingGouraud.vs" />
+    <None Include="light_caster.fs" />
+    <None Include="light_caster.vs" />
+    <None Include="material.fs" />
+    <None Include="material.vs" />
+    <None Include="mutiple.fs" />
     <None Include="uniform.glsl" />
     <None Include="vertex.glsl" />
   </ItemGroup>
