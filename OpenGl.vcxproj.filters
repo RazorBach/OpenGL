@@ -18,7 +18,7 @@
     <ClCompile Include="D:\迅雷下载\src\glad.c">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="light.cpp">
+    <ClCompile Include="normalmapping\normalmapping.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -74,6 +74,72 @@
     <None Include="mutiple.fs">
       <Filter>资源文件</Filter>
     </None>
+    <None Include="easy.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="easy.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="shadersinglecolor.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="blending\blending.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="framebuffer\framebuffer_screen.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="framebuffer\framebuffer_screen.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="cubemaps\cubemaps.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="cubemaps\cubemaps.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="cubemaps\cube.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="cubemaps\cube.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="advanceGlsl\advance_glsl.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="advanceGlsl\blue.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="advanceGlsl\green.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="advanceGlsl\red.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="advanceGlsl\yellow.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="geometryShader\geometry.gs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="geometryShader\geometry.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="geometryShader\geometry.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="model_loading_withlight.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="model_loading_withlight.vs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="model_loading.fs">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="model_loading.vs">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Shader.h">
@@ -83,6 +149,12 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

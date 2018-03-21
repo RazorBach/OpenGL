@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -82,9 +82,10 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc140-mt.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -101,11 +102,12 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>assimp-vc140-mt.lib;opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -123,13 +125,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="D:\迅雷下载\src\glad.c" />
-    <ClCompile Include="light.cpp" />
+    <ClCompile Include="normalmapping\normalmapping.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="advanceGlsl\advance_glsl.vs" />
+    <None Include="advanceGlsl\blue.fs" />
+    <None Include="advanceGlsl\green.fs" />
+    <None Include="advanceGlsl\red.fs" />
+    <None Include="advanceGlsl\yellow.fs" />
+    <None Include="blending\blending.fs" />
     <None Include="color.glsl" />
     <None Include="colorYellow.glsl" />
     <None Include="CoorVertex.vs" />
+    <None Include="cubemaps\cube.fs" />
+    <None Include="cubemaps\cube.vs" />
+    <None Include="cubemaps\cubemaps.fs" />
+    <None Include="cubemaps\cubemaps.vs" />
     <None Include="cutoff.fs" />
+    <None Include="easy.fs" />
+    <None Include="easy.vs" />
+    <None Include="framebuffer\framebuffer_screen.fs" />
+    <None Include="framebuffer\framebuffer_screen.vs" />
+    <None Include="geometryShader\geometry.fs" />
+    <None Include="geometryShader\geometry.gs" />
+    <None Include="geometryShader\geometry.vs" />
     <None Include="lamp.fs" />
     <None Include="lamp.vs" />
     <None Include="lighting.fs" />
@@ -140,12 +159,19 @@
     <None Include="light_caster.vs" />
     <None Include="material.fs" />
     <None Include="material.vs" />
+    <None Include="model_loading.fs" />
+    <None Include="model_loading.vs" />
+    <None Include="model_loading_withlight.fs" />
+    <None Include="model_loading_withlight.vs" />
     <None Include="mutiple.fs" />
+    <None Include="shadersinglecolor.fs" />
     <None Include="uniform.glsl" />
     <None Include="vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="mesh.h" />
+    <ClInclude Include="model.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>

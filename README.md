@@ -1,3 +1,3 @@
 # learnOpenGL
 
-https://learnopengl.com/
+Just some openGL staff.Not well sorted yet:)
